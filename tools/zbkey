@@ -48,7 +48,9 @@ def associate_response_handle(packet):
             or none if the packet was not the length or type expected.
     '''
     print("Length of packet received in associate_handle: {0}".format(len(packet)))
-    print(kbutils.hexdump(packet))
+    print('packet',packet)
+
+    #print(kbutils.hexdump(packet))
     if len(packet) > 24:
         # Offset to Command Type, check to be 0x02 for assoc response type
         if packet[21] == '\x02':
@@ -71,7 +73,8 @@ def transport_response_handle(packet):
             or none if the packet was not the length or type expected.
     '''
     print("Length of packet received in transport_handle: {0}".format(len(packet)))
-    print(kbutils.hexdump(packet))
+    print('packet',packet)
+    #print(kbutils.hexdump(packet))
     if len(packet) > 19:
     	if packet[19] == '\x05':
         	key = packet[21:33]
@@ -102,16 +105,16 @@ arg_delay = 4
 # Parameters to build association packet
 arg_IEE64addr = None    #May be specified on command line
 arg_panID = None        #May be specified on command line
-ASSOC_SEQNUM = '\x01'
-ASSOC_DST = '\x00\x00'
-ASSOC_SRC_PANID = '\xff\xff'
+ASSOC_SEQNUM = b'\x01'
+ASSOC_DST = b'\x00\x00'
+ASSOC_SRC_PANID = b'\xff\xff'
 assoc_packet = None
 
 # Parameters to build data packet
-ASSOC_DATA_SEQNUM = '\x02'
+ASSOC_DATA_SEQNUM = b'\x02'
 
 # key transport data arguments
-DATA_KEY_SEQNUM = '\x03'
+DATA_KEY_SEQNUM = b'\x03'
 
 # Command Line Processing
 while len(sys.argv) > 1:
@@ -162,7 +165,9 @@ kb.set_channel(arg_channel)
 
 # Build the packet we use to send ASSOCIATION REQUEST
 #   last byte is association request, 80 to request alloc addr only, can try other combos like c0
-assoc_packet = '\x23\xc8'+ASSOC_SEQNUM+arg_panID+ASSOC_DST+ASSOC_SRC_PANID+arg_IEE64addr+'\x01'+'\x80' # associate packet 
+print('argpanid: ',arg_panID)
+print('arg_IEE64addr: ',arg_IEE64addr)
+assoc_packet = b'\x23\xc8'+ASSOC_SEQNUM+arg_panID+ASSOC_DST+ASSOC_SRC_PANID+arg_IEE64addr+b'\x01'+b'\x80' # associate packet 
 
 print("Sending association packet...")
 #print kbutils.hexdump(assoc_packet)
@@ -170,7 +175,7 @@ kb.inject(assoc_packet)
 
 # NOW SEND FIRST DATA REQUEST
 # Build the data packet sent after the association response is received
-data_assoc_packet  = '\x63\xc8'+ASSOC_DATA_SEQNUM+arg_panID+ASSOC_DST+arg_IEE64addr+'\x04' #data packet after association        
+data_assoc_packet  = b'\x63\xc8'+ASSOC_DATA_SEQNUM+arg_panID+ASSOC_DST+arg_IEE64addr+b'\x04' #data packet after association        
 
 time.sleep(0.5)
 # send data after association packet

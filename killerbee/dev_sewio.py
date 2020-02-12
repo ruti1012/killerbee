@@ -159,7 +159,7 @@ class SEWIO:
         self.capabilities.setcapab(KBCapabilities.FREQ_900, True)
         self.capabilities.setcapab(KBCapabilities.FREQ_868, True)
         self.capabilities.setcapab(KBCapabilities.FREQ_784, True)
-        if ( self.__revision_num == "0.9.0" ):
+        if ( self.__revision_num == "0.9.0" or self.__revision_num == "0.8.5"):
             self.capabilities.setcapab(KBCapabilities.INJECT, True)
             self.capabilities.setcapab(KBCapabilities.PHYJAM, True)
         return
